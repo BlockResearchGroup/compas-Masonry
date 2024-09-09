@@ -1,0 +1,6 @@
+compas >= 2.4
+compas_assembly
+compas_cra
+compas_model
+compas_rui
+compas_session
