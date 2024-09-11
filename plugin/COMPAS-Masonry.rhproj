@@ -2,7 +2,7 @@
   "id": "4384e04f-2997-429b-b3fc-53e7fe78703e",
   "identity": {
     "name": "COMPAS-Masonry",
-    "version": "0.1.1",
+    "version": "0.1.1-beta",
     "publisher": {
       "email": "tom.v.mele@gmail.com",
       "name": "Tom Van Mele",
@@ -36,7 +36,13 @@
         "version": "3.*.*"
       },
       "title": "Masonry",
-      "uri": "Masonry.py"
+      "uri": "Masonry.py",
+      "image": {
+        "light": {
+          "type": "svg",
+          "data": "PHN2ZyBpZD0iT1BFTl94NUZfU0FWRSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMzIgMzIiPgo8L3N2Zz4="
+        }
+      }
     },
     {
       "id": "04447f90-ccb1-40dd-b091-723956a0b949",
@@ -118,6 +124,18 @@
       },
       "title": "Masonry_reqs_install",
       "uri": "Masonry_reqs_install.py"
+    }
+  ],
+  "libraries": [
+    {
+      "type": "uri",
+      "library": {
+        "base": "file:///Users/vanmelet/Code/compas-Masonry/src/compas_masonry/",
+        "language": {
+          "id": "*.*.python",
+          "version": "3.*.*"
+        }
+      }
     }
   ]
 }
