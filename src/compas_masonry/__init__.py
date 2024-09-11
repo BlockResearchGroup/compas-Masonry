@@ -1,7 +1,12 @@
-from __future__ import print_function
-
 import os
 
+title = "COMPAS Masonry"
+designers = []
+developers = ["Tom Van Mele", "Alessandro Dell'Endice"]
+documenters = []
+description = """
+"""
+website = "https://gitbook.com/blockresearchgroup/compas-Masonry"
 
 __author__ = ["tom van mele"]
 __copyright__ = "ETH Zurich - Block Research Group"
