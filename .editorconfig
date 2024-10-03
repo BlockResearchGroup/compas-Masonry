@@ -16,7 +16,7 @@ end_of_line = crlf
 [*.md]
 trim_trailing_whitespace = false
 
-[*.yml]
+[*.{yml,yaml,toml}]
 indent_size = 2
 
 [*.rst]
