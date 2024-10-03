@@ -106,24 +106,6 @@
       },
       "title": "Masonry_session_save",
       "uri": "Masonry_session_save.py"
-    },
-    {
-      "id": "f1693b65-203f-4795-8bf5-73e1e8c0083c",
-      "language": {
-        "id": "*.*.python",
-        "version": "3.*.*"
-      },
-      "title": "Masonry_reqs_check",
-      "uri": "Masonry_reqs_check.py"
-    },
-    {
-      "id": "2022efd3-8405-43e9-8164-2997356d8408",
-      "language": {
-        "id": "*.*.python",
-        "version": "3.*.*"
-      },
-      "title": "Masonry_reqs_install",
-      "uri": "Masonry_reqs_install.py"
     }
   ],
   "libraries": [
