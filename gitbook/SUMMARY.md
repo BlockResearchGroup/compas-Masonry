@@ -13,8 +13,10 @@
 
 ## Additional information
 
-* [Legal terms](additional/legal.md)
+* [Contributions](additional/contributions.md)
+* [Acknowledgements](additional/acknowledgements.md)
 * [Citing COMPAS Masonry](additional/citing.md)
+* [Legal terms](additional/legal.md)
 * [FAQ](additional/faq.md)
 
 ## Links
