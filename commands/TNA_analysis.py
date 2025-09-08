@@ -2,10 +2,11 @@
 # venv: brg-csd
 # r: compas_masonry
 
-import rhinoscriptsyntax as rs  # type: ignore
 import ast
-from numpy import zeros
+
+import rhinoscriptsyntax as rs  # type: ignore
 from numpy import array
+from numpy import zeros
 
 from compas_masonry.scene import RhinoFormDiagramObject
 from compas_masonry.session import MasonrySession as Session
@@ -110,11 +111,11 @@ def RunCommand():
             if not displ:
                 break
 
+            displ_list = ast.literal_eval(displ)
+
             if len(displ_list) != 3:
                 print("provide a 3x1 vector as shown as the example")
                 break
-            
-            displ_list = ast.literal_eval(displ)
 
             for vertex in vertices:
                 displacement_array[supports.index(vertex)] = array(displ_list)
@@ -127,7 +128,7 @@ def RunCommand():
                 pass
             else:
                 break
-        
+
         analysis = Analysis.create_compl_energy_analysis(formdiagram, envelope, solver="SLSQP", support_displacement=displacement_array)
 
     elif objective == "Bestfit":
