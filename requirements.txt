@@ -17,3 +17,14 @@ compas_3dec >=0.2.0
 # platform. Do NOT lower this pin to "fix" an install: 0.5.0-0.7.0 have been
 # removed from PyPI, and 0.4.0 breaks under NumPy 2.
 compas_cra >=0.8.0
+
+# compas_dem's analysis/cra.py imports pyomo.environ to monkeypatch SolverFactory
+# and inject DEFAULT_IPOPT_OPTIONS. compas_cra 0.8.0 never calls pyomo, so that
+# patch is now a no-op -- but the import still runs, so a CRA solve dies with
+# ModuleNotFoundError without pyomo present. Measured cost of the lost options on
+# the 20-block test arch: 1.8e-07 relative, IPOPT reporting "acceptable" where
+# 0.5.0 reported "optimal". Keep this until compas_dem drops the patch upstream.
+pyomo >=6.7.3,<6.9
+
+# wtf
+matplotlib
