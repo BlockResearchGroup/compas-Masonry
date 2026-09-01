@@ -34,12 +34,13 @@ import sys
 import xml.etree.ElementTree as ET
 import zipfile
 
-from invoke import Exit
-from invoke import task
+from invoke.exceptions import Exit
+from invoke.tasks import task
 
 # `8.*-windows` is accepted and silently produces a generic `rh8` build that
 # claims no platform. The spelling Rhino actually recognises is `8.*-win`.
 TARGETS = {
+    "any": ("8.*", "build/rh8"),
     "mac": ("8.*-macOS", "build/rh8-mac"),
     "win": ("8.*-win", "build/rh8-win"),
 }
@@ -48,10 +49,6 @@ TOOLS = {
     "darwin": pathlib.Path("/Applications/Rhino 8.app/Contents/Resources/bin"),
     "win32": pathlib.Path(r"C:\Program Files\Rhino 8\System"),
 }
-
-
-def _platform():
-    return "win" if sys.platform == "win32" else "mac"
 
 
 def _tool(name):
@@ -123,7 +120,7 @@ def _assert_designed_rui(rui, builddir):
             "Without it the tracked resources/COMPAS-Masonry.rui is used as it stands, and step 2 still fails the build if it no longer matches."
         ),
         "bump-rhproj": "also write VERSION into COMPAS-Masonry.rhproj identity.version",
-        "target": "'mac' or 'win' (default: this machine), or a literal rhinocode buildtarget",
+        "target": "'any' (default), 'mac', 'win', or a literal rhinocode buildtarget",
         "builddir": "override the output directory implied by --target",
     }
 )
@@ -133,13 +130,13 @@ def build_plugin(ctx, version, regen_icons=False, bump_rhproj=False, target=None
     rui = root / "resources" / "COMPAS-Masonry.rui"
     rhproj = root / "COMPAS-Masonry.rhproj"
 
-    key = target or _platform()
+    key = target or "any"
     if key in TARGETS:
         buildtarget, default_dir = TARGETS[key]
     else:
         buildtarget = key
         if builddir is None:
-            raise Exit(f"--target {key} is not 'mac' or 'win', so --builddir is required")
+            raise Exit(f"--target {key} is not 'any', 'mac', or 'win', so --builddir is required")
         default_dir = builddir
     out = root / (builddir or default_dir)
 

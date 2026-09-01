@@ -46,8 +46,8 @@ RHINOCODE="${RHINOCODE:-$RHINO_APP/Contents/Resources/bin/rhinocode}"
 YAK="${YAK:-$RHINO_APP/Contents/Resources/bin/yak}"
 
 VERSION=""
-TARGET="8.*-macOS"
-BUILDDIR="build/rh8-mac"
+TARGET="8.*"
+BUILDDIR="build/rh8"
 SKIP_ICONS=0
 BUMP_RHPROJ=0
 

@@ -1,13 +1,11 @@
-from __future__ import print_function
-
 import os
 
-import plugin_tasks
+from plugin_tasks import build_plugin
 from compas_invocations2 import build
 from compas_invocations2 import docs
 from compas_invocations2 import style
 from compas_invocations2 import tests
-from invoke import Collection
+from invoke.collection import Collection
 
 ns = Collection(
     docs.help,
@@ -23,7 +21,7 @@ ns = Collection(
     build.clean,
     build.release,
     build.build_ghuser_components,
-    plugin_tasks.build_plugin,
+    build_plugin,
 )
 ns.configure(
     {
