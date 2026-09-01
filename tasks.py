@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import os
 
+import plugin_tasks
 from compas_invocations2 import build
 from compas_invocations2 import docs
 from compas_invocations2 import style
@@ -22,6 +23,7 @@ ns = Collection(
     build.clean,
     build.release,
     build.build_ghuser_components,
+    plugin_tasks.build_plugin,
 )
 ns.configure(
     {

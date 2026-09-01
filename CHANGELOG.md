@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* `set_rhproj_icons.py` no longer flattens the SVG `<style>` block into presentation attributes before storing an icon in `COMPAS-Masonry.rhproj`. Flattening cannot preserve `mix-blend-mode`, `isolation` or `clip-path` — those have no presentation-attribute form — and dropping them changes what the artwork means: an element that is invisible by design under a blend mode becomes an opaque block over everything behind it. Measured over the 22 icons with only the flattening changed: **8 render differently, worst 25.0%**, independently reproducing the finding made for the sprite sheet on 2026-08-28 (8 icons, worst 23.5%). `make_icons.py` stopped flattening then; this is the same fix on the rhproj path.
+
+### Fixed
+
+* `CM_Problem_displacements` has its icon back. It is the only icon using `clip-path`, `isolation` and `mix-blend-mode` together, which made it the one the flattening step mangled worst, and it was unbound in 0.5.2 to get a build through. With the flattening removed it binds and renders, and `verify_icons.py` — which fails on an SVG that is present but not bound, and so aborts a build at the icon-verification step — passes again.
+
 ### Removed
 
 

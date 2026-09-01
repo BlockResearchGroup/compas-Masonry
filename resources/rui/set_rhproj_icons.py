@@ -3,9 +3,13 @@
 This is icon System A: one SVG per command, stored inline, driving the Script
 Editor and the command palette. See temp/wiki_icons.md §2.1.
 
-For each codes[] entry it REPLACES image wholesale — flattening the CSS, wrapping
-the icon in Rhino's dark-aware outer SVG, and rendering the 24x24 light/dark PNG
-cache. Replacing rather than merging is what removes any link to the old artwork.
+For each codes[] entry it REPLACES image wholesale — wrapping the icon in Rhino's
+dark-aware outer SVG and rendering the 24x24 light/dark PNG cache. Replacing
+rather than merging is what removes any link to the old artwork.
+
+The SVG is stored AS DRAWN. This script used to flatten the <style> block into
+presentation attributes first, which silently destroyed `mix-blend-mode`,
+`isolation` and `clip-path` — see the comment at the call site.
 
     python resources/rui/set_rhproj_icons.py --dry-run
     python resources/rui/set_rhproj_icons.py
@@ -22,7 +26,6 @@ import pathlib
 import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from svgtools import flatten_css  # noqa: E402
 from svgtools import have_rasterizer  # noqa: E402
 from svgtools import rasterize  # noqa: E402
 from svgtools import wrap_for_rhino  # noqa: E402
@@ -54,7 +57,23 @@ def main():
             missing.append(name)
             continue
 
-        wrapped = wrap_for_rhino(flatten_css(source.read_text()), args.fill_dark, args.stroke_dark)
+        # Deliberately NOT flatten_css — the same fix make_icons.py took on
+        # 2026-08-28, applied here a release later.
+        #
+        # Flattening a <style> block into presentation attributes cannot preserve
+        # `mix-blend-mode`, `isolation` or `clip-path`: those have no attribute
+        # form, so promoting them into PAINT_PROPS does not help either. Dropping
+        # them changes what the icon MEANS — `.k { fill: #fff }` under
+        # `mix-blend-mode: multiply` is invisible by design, and without the blend
+        # it paints an opaque white block over the artwork behind it. That is the
+        # "colours mixed black and white, artifacts" seen in 0.5.2.
+        #
+        # Both consumers below cope with the <style> block: `rasterize` shells out
+        # to rsvg-convert, which honours CSS (measured pixel-exact on the 22-tile
+        # sheet), and `wrap_for_rhino` only nests the text inside Rhino's outer
+        # <svg>. CM_Problem_displacements.svg is the only icon using all three
+        # CSS-only properties at once, which is why it was the one that broke.
+        wrapped = wrap_for_rhino(source.read_text(), args.fill_dark, args.stroke_dark)
         png = base64.b64encode(rasterize(wrapped, RENDER)).decode()
 
         entry["image"] = collections.OrderedDict(

@@ -77,6 +77,17 @@ def flatten_css(svg_text):
 
     An attribute already present on the element wins, matching CSS specificity
     closely enough for artwork of this shape.
+
+    UNUSED, and kept only so the reasoning survives with it. Both icon pipelines
+    stopped calling this — make_icons.py on 2026-08-28, set_rhproj_icons.py after
+    it shipped a broken 0.5.2 toolbar. Flattening CANNOT preserve
+    `mix-blend-mode`, `isolation` or `clip-path`, which have no presentation-
+    attribute form, and promoting them into PAINT_PROPS does not bring them back.
+    The damage looks like wrong z-order: an element that is invisible by design
+    under a blend mode becomes an opaque block without it.
+
+    Do not reintroduce this without a rendered before/after comparison. Every
+    consumer here honours a <style> block already.
     """
     root = ET.fromstring(svg_text)
 

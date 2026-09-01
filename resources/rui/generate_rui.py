@@ -43,6 +43,8 @@ import base64
 import io
 import json
 import pathlib
+import re
+import uuid
 import xml.etree.ElementTree as ET
 
 from compas_rui.rui import Rui
@@ -64,6 +66,45 @@ COLLECTION_GUID = "35a29155-639d-45c1-bf37-6341627df120"
 
 # tile size of each sheet, matching compas_rui's item_width/item_height
 SIZES = {"small_bitmap": 16, "normal_bitmap": 24, "large_bitmap": 32}
+
+GUID_RE = re.compile(r"\b[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\b")
+
+
+def _pin_inner_guids(ruipath) -> int:
+    """Rewrite every guid below the collection as a deterministic uuid5.
+
+    COLLECTION_GUID above pins only the collection itself. Everything inside it
+    — toolbar groups, toolbars, buttons, macros — is a fresh `uuid.uuid4()` from
+    compas_rui on every run, so two builds from identical inputs never produce
+    the same bytes. Measured 2026-09-01: 142 lines of pure guid churn between
+    consecutive runs with no input change.
+
+    That costs three things. The `.rui` is a tracked artifact, so every build
+    dirties it with a diff nobody wrote. `git diff` can no longer answer whether
+    a rebuild changed anything real. And Rhino identifies buttons by guid, so a
+    rebuild discards any toolbar customisation a user has made.
+
+    uuid5 is a hash, not a random draw: the same inputs give the same guids, on
+    any machine. Keying on order of first appearance is enough because that order
+    is driven by ui.json, and remapping consistently keeps every internal
+    reference intact — a `<left_macro_id>` still points at its macro.
+
+    The base64 sprite sheets cannot collide with the pattern: standard base64 has
+    no `-`.
+    """
+    path = pathlib.Path(ruipath)
+    mapping = {}
+
+    def pin(match):
+        old = match.group(0)
+        if old.lower() == COLLECTION_GUID:
+            return old
+        if old not in mapping:
+            mapping[old] = str(uuid.uuid5(uuid.UUID(COLLECTION_GUID), str(len(mapping))))
+        return mapping[old]
+
+    path.write_text(GUID_RE.sub(pin, path.read_text()))
+    return len(mapping)
 
 
 def _fill_all_bitmap_sizes(ruipath, uipath) -> bool:
@@ -115,4 +156,7 @@ if __name__ == "__main__":
     rui.write()
     print(f"wrote {OUT}")
     print(f"  collection guid {COLLECTION_GUID} (stable, so a rebuild replaces rather than adds)")
+    # Before the sheets go in, so the regex walks a small file rather than 20k
+    # of base64 that cannot match it anyway.
+    print(f"  pinned {_pin_inner_guids(str(OUT))} inner guids (deterministic, so a rebuild is byte-identical)")
     _fill_all_bitmap_sizes(str(OUT), str(UI))
