@@ -1,6 +1,6 @@
 #! python3
 # venv: brg-csd
-# r: compas_masonry>=0.4.0
+# r: compas_masonry>=0.4.1
 
 """Results_show_options — draw a stored result set.
 

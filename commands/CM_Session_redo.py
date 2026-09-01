@@ -1,6 +1,6 @@
 #! python3
 # venv: brg-csd
-# r: compas_masonry>=0.4.0
+# r: compas_masonry>=0.4.1
 
 """Session_redo — step one state forward through the plugin's own history.
 

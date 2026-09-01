@@ -1,6 +1,6 @@
 #! python3
 # venv: brg-csd
-# r: compas_masonry>=0.4.0
+# r: compas_masonry>=0.4.1
 
 """Problem_solver_options — select and configure the solver on a Problem.
 

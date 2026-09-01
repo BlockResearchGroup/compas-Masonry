@@ -1,6 +1,6 @@
 #! python3
 # venv: brg-csd
-# r: compas_masonry>=0.4.0
+# r: compas_masonry>=0.4.1
 
 """Session_settings_WIP_options — RhinoCommon variant of Session_settings_WIP.
 
